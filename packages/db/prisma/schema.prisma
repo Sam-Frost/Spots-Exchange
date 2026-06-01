@@ -43,7 +43,7 @@ model Fill {
 
 model Market {
   id    Int     @id @default(autoincrement()) 
-  slug String
+  slug String @unique
   priceTickSize String
   quantityStepSize String
   createdAt DateTime @default(now())

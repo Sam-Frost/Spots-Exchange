@@ -3,6 +3,10 @@ import type { Request, Response } from "express";
 import { createMarketSchema } from "../schema/admin-schema";
 import { ValidationError } from "../errors/ValidationError";
 import { ApiResponse } from "../util/api-response";
+import { generateCorrelationId, sendToEngine } from "../queue/redis";
+import type { CreateMarket, ToBackend, ToEngine } from "common";
+import { RequestTimeoutError } from "../errors/request-timeout-error";
+import { REQUEST_TIMED_OUT } from "../util/constants";
 
 export async function createMarket(req: Request, res: Response): Promise<void> {
   const parsedData = createMarketSchema.safeParse(req.body);
@@ -19,6 +23,25 @@ export async function createMarket(req: Request, res: Response): Promise<void> {
       },
     });
 
+    const data: ToEngine<CreateMarket> = {
+      correlationId: generateCorrelationId(),
+      eventName: "CREATE_MARKET",
+      data: {
+        marketId: createdMarket.id,
+        slug: createdMarket.slug,
+        quantityStepSize: createdMarket.quantityStepSize,
+        priceTickSize: createdMarket.priceTickSize,
+      },
+    };
+
+    const engineResponse = (await sendToEngine(data)) as ToBackend<unknown>;
+    console.log(engineResponse);
+    if (!engineResponse.success) {
+      if (engineResponse.error == REQUEST_TIMED_OUT) {
+        throw new RequestTimeoutError();
+      }
+    }
+
     res.status(201).json(
       new ApiResponse(
         true,
@@ -29,6 +52,10 @@ export async function createMarket(req: Request, res: Response): Promise<void> {
       ),
     );
   } catch (err) {
+    if (err instanceof RequestTimeoutError) {
+      throw err;
+    }
+    console.log(err);
     // TODO : Handle Error
   }
 }
