@@ -8,8 +8,8 @@ export const app = express();
 
 app.use(express.json());
 
-app.use(adminRouter);
 app.use(orderRouter);
 app.use(userRouter);
+app.use(adminRouter);
 
 app.use(errorHandler);

@@ -1,3 +1,3 @@
 export const ADMIN_API_KEY_HEADER = "X-ADMIN-API-KEY";
-export const TIMEOUT_DURATION = 1000;
+export const TIMEOUT_DURATION = 10000;
 export const REQUEST_TIMED_OUT = "REQUEST_TIMED_OUT";

@@ -8,3 +8,8 @@ export type CreateMarket = {
 export type RegisterUser = {
   userId: number;
 };
+
+export type AddBalance = {
+  userId: number;
+  amount: string;
+};

@@ -13,6 +13,7 @@ export const db = {
   user: {
     getUser,
     createUser,
+    increaseBalance,
   },
   orderbook: {
     createNewOrderBook,
@@ -37,6 +38,18 @@ function createUser(userId: number) {
     }
   }
   database.users.push(new User(userId));
+}
+
+function increaseBalance(userId: number, amount: string) {
+  const user = getUser(userId);
+
+  // TODO
+}
+
+function decreaseBalance(userId: number, amount: string) {
+  const user = getUser(userId);
+
+  // TODO
 }
 
 // Orderbook Functions

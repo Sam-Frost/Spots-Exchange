@@ -1,7 +1,11 @@
 import { createClient } from "redis";
 import { env } from "../util/env";
 import { logger } from "../util/logger";
-import { ENGINE_TO_BACKEND_STREAM, type ToBackend } from "common";
+import {
+  ENGINE_TO_BACKEND_STREAM,
+  type EventType,
+  type ToBackend,
+} from "common";
 
 export const streamWriter = createClient({
   url: env.redisUrl,
@@ -18,5 +22,19 @@ export async function sendToBackend(data: ToBackend<unknown>) {
     ...data,
     success: String(data.success),
     data: JSON.stringify(data.data),
+  });
+}
+
+export async function sendErrorToBackend(
+  error: string,
+  eventName: EventType,
+  correlationId: string,
+) {
+  await sendToBackend({
+    correlationId: correlationId,
+    eventName: eventName,
+    success: false,
+    data: null,
+    error,
   });
 }

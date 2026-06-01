@@ -5,5 +5,4 @@ import { createMarket } from "../controller/admin-controller";
 
 export const adminRouter = Router();
 
-adminRouter.use(adminAuth);
-adminRouter.post("/api/v1/admin/market", asyncHandler(createMarket));
+adminRouter.post("/api/v1/admin/market", adminAuth, asyncHandler(createMarket));

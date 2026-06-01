@@ -8,6 +8,7 @@ import { generateCorrelationId, sendToEngine } from "../queue/redis";
 import type { RegisterUser, ToBackend, ToEngine } from "common";
 import { ApiResponse } from "../util/api-response";
 import { generateToken } from "../util/jwt";
+import { PrismaClientKnownRequestError } from "db/generated/prisma/internal/prismaNamespace";
 
 export async function signupController(
   req: Request,
@@ -39,7 +40,7 @@ export async function signupController(
     const engineResponse = (await sendToEngine(data)) as ToBackend<unknown>;
 
     if (!engineResponse.success) {
-      res.status(200).json(new ApiError(engineResponse.error));
+      res.status(200).json(new ApiError(engineResponse.error!));
       return;
     }
 
@@ -54,6 +55,11 @@ export async function signupController(
       ),
     );
   } catch (err) {
+    if (err instanceof PrismaClientKnownRequestError) {
+      res.status(200).json(new ApiError("Username already exist"));
+      return;
+    }
+    console.log(err);
     throw new ApiError("Error not handled yet");
   }
 }
