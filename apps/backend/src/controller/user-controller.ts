@@ -1,3 +1,4 @@
+import { prisma } from "db";
 import type { Request, Response } from "express";
 
 export async function signupController(

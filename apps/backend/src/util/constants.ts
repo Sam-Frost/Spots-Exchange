@@ -1,0 +1,1 @@
+export const ADMIN_API_KEY_HEADER = "X-ADMIN-API-KEY";

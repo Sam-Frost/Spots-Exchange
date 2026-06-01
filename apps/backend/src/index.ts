@@ -1,12 +1,14 @@
-import express from "express";
-
+import { app } from "./app";
+import { streamReader, streamWriter } from "./queue/redis";
 import { env } from "./util/env";
 import { logger } from "./util/logger";
 
-const app = express();
+async function init() {
+  await Promise.all([streamReader.connect(), streamWriter.connect()]);
 
-app.use(express.json());
+  app.listen(env.port, () => {
+    logger.info(`Server started listening on ${env.port}`);
+  });
+}
 
-app.listen(env.port, () => {
-  logger.info(`Server started listening on ${env.port}`);
-});
+await init();

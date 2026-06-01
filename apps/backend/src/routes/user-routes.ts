@@ -4,7 +4,7 @@ import {
   signinController,
   signupController,
 } from "../controller/user-controller";
-import { asyncHandler } from "../util/asyncHandler";
+import { asyncHandler } from "../util/async-handler";
 
 const userRouter = Router();
 
