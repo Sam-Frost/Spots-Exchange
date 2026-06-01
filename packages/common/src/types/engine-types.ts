@@ -2,7 +2,8 @@ export type EventType =
   | "CREATE_MARKET"
   | "REGISTER_USER"
   | "ADD_BALANCE"
-  | "CREATER_ORDER";
+  | "CREATER_ORDER"
+  | "CANCEL_ORDER";
 
 export type ToEngine<T> = {
   correlationId: string;

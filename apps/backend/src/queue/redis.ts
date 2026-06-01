@@ -1,12 +1,12 @@
 import { createClient } from "redis";
 import { logger } from "../util/logger";
 import { env } from "../util/env";
-import type { ToBackend, ToEngine } from "common";
 import {
   BACKEND_TO_ENGINE_STREAM,
-  REQUEST_TIMED_OUT,
-  TIMEOUT_DURATION,
-} from "../util/constants";
+  type ToBackend,
+  type ToEngine,
+} from "common";
+import { REQUEST_TIMED_OUT, TIMEOUT_DURATION } from "../util/constants";
 import { pendingResolves } from "./eventListener";
 
 export const streamWriter = createClient({

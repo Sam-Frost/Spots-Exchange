@@ -7,8 +7,5 @@ function readFromEnv(name: string) {
 }
 
 export const env = {
-  port: Number(readFromEnv("PORT")),
   redisUrl: readFromEnv("REDIS_URL"),
-  adminApiKey: readFromEnv("ADMIN_API_KEY"),
-  jwtSecretKey: readFromEnv("JWT_SECRET_KEY"),
 };

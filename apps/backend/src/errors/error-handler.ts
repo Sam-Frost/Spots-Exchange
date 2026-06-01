@@ -3,6 +3,7 @@ import { ApiError } from "../util/api-error";
 import { logger } from "../util/logger";
 import { ValidationError } from "./ValidationError";
 import { RequestTimeoutError } from "./request-timeout-error";
+import { AuthorizationError } from "./AuthorizationError";
 
 export function errorHandler(
   err: Error,
@@ -15,7 +16,13 @@ export function errorHandler(
     logger.error(err.validationErrors);
   } else if (err instanceof RequestTimeoutError) {
     return res.status(408).json(new ApiError("Request timed out"));
+  } else if (err instanceof AuthorizationError) {
+    return res.status(401).json(new ApiError(err.message));
   } else {
+    logger.error(err.name);
+    logger.error(err.message);
+    logger.error(err.cause);
+    logger.error(err.stack);
     res.status(500).json(new ApiError("An unkown error occured"));
   }
 }

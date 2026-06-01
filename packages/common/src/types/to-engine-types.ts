@@ -4,3 +4,7 @@ export type CreateMarket = {
   priceTickSize: String;
   quantityStepSize: String;
 };
+
+export type RegisterUser = {
+  userId: number;
+};
