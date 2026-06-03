@@ -13,5 +13,5 @@ export type ToEngine<T> = {
 
 export type ToBackend<T> = ToEngine<T> & {
   error?: string;
-  success: boolean;
+  success: string;
 };

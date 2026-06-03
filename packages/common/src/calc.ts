@@ -1,12 +1,12 @@
-function toScaled(amount: string, precision: number) {
-  return;
-}
+// function toScaled(amount: string, tickOrStep: string) {
+//   return Number(amount) / Number(tickOrStep);
+// }
 
-export const calc = {
-  toScaled,
-  //   fromScaled,
-  //   add,
-  //   subtract,
-  //   multiply,
-  //   divide,
-};
+// function fromScaled(amount: number, tickOrStep: string) {
+//   return String(amount * Number(tickOrStep));
+// }
+
+// export const calc = {
+//   toScaled,
+//   fromScaled,
+// };

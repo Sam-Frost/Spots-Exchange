@@ -14,10 +14,11 @@ export function errorHandler(
   if (err instanceof ValidationError) {
     logger.error("Validation error occured");
     logger.error(err.validationErrors);
+    res.status(400).json(new ApiError("Validation error occured!"));
   } else if (err instanceof RequestTimeoutError) {
-    return res.status(408).json(new ApiError("Request timed out"));
+    res.status(408).json(new ApiError("Request timed out"));
   } else if (err instanceof AuthorizationError) {
-    return res.status(401).json(new ApiError(err.message));
+    res.status(401).json(new ApiError(err.message));
   } else {
     logger.error(err.name);
     logger.error(err.message);

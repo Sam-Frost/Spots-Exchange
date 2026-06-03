@@ -1,11 +1,17 @@
 import bcrypt from "bcrypt";
 import { prisma } from "db";
 import type { Request, Response } from "express";
-import { signupSchema } from "../schema/user-schema";
+import { onrampSchema, signupSchema } from "../schema/user-schema";
 import { ValidationError } from "../errors/ValidationError";
 import { ApiError } from "../util/api-error";
 import { generateCorrelationId, sendToEngine } from "../queue/redis";
-import type { RegisterUser, ToBackend, ToEngine } from "common";
+import type {
+  AddBalance,
+  AddBalanceResponse,
+  RegisterUser,
+  ToBackend,
+  ToEngine,
+} from "common";
 import { ApiResponse } from "../util/api-response";
 import { generateToken } from "../util/jwt";
 import { PrismaClientKnownRequestError } from "db/generated/prisma/internal/prismaNamespace";
@@ -110,7 +116,45 @@ export async function onRampController(
   req: Request,
   res: Response,
 ): Promise<void> {
-  res.status(503).json({
-    mesage: "To be implemented",
-  });
+  const parsedBody = onrampSchema.safeParse(req.body);
+
+  if (!parsedBody.success) {
+    throw new ValidationError(parsedBody.error);
+  }
+
+  console.log("RUSERIDID " + req.userId);
+  try {
+    const data: ToEngine<AddBalance> = {
+      correlationId: generateCorrelationId(),
+      eventName: "ADD_BALANCE",
+      data: {
+        userId: Number(req.userId!),
+        amount: parsedBody.data.amount,
+      },
+    };
+    const engineResponse = (await sendToEngine(
+      data,
+    )) as ToBackend<AddBalanceResponse>;
+
+    console.log(engineResponse);
+
+    if (engineResponse.success == "false") {
+      res.status(200).json(new ApiError(engineResponse.error!));
+      return;
+    }
+
+    res.status(201).json(
+      new ApiResponse(
+        true,
+        {
+          balance: engineResponse.data.balance,
+          lockedBalance: engineResponse.data.lockedBalance,
+        },
+        "User successfully onramp!",
+      ),
+    );
+  } catch (err) {
+    console.log(err);
+    throw new ApiError("Error not handled yet");
+  }
 }

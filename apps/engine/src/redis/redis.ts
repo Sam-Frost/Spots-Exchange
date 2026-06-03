@@ -33,7 +33,7 @@ export async function sendErrorToBackend(
   await sendToBackend({
     correlationId: correlationId,
     eventName: eventName,
-    success: false,
+    success: "false",
     data: null,
     error,
   });

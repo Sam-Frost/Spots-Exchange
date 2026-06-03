@@ -2,6 +2,7 @@ import {
   BACKEND_TO_ENGINE_STREAM,
   type AddBalance,
   type CreateMarket,
+  type CreateOrder,
   type RegisterUser,
   type ToEngine,
 } from "common";
@@ -11,7 +12,7 @@ import {
   streamReader,
 } from "../redis/redis";
 import { createMarket } from "./market";
-import { createOrder, cancelOrder } from "./order";
+import { createOrder } from "./order";
 import { addBalance, registerUser } from "./user";
 import { logger } from "../util/logger";
 
@@ -45,13 +46,10 @@ export async function engineInit() {
           await registerUser(eventData as ToEngine<RegisterUser>);
           break;
         case "ADD_BALANCE":
-          addBalance(eventData as ToEngine<AddBalance>);
+          await addBalance(eventData as ToEngine<AddBalance>);
           break;
         case "CREATER_ORDER":
-          createOrder();
-          break;
-        case "CANCEL_ORDER":
-          cancelOrder();
+          createOrder(eventData as ToEngine<CreateOrder>);
           break;
         default:
           await sendErrorToBackend(

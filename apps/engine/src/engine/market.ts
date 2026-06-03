@@ -10,7 +10,7 @@ export async function createMarket(data: ToEngine<CreateMarket>) {
   await sendToBackend({
     correlationId: data.correlationId,
     eventName: data.eventName,
-    success: true,
+    success: "true",
     data: null,
   });
 }
