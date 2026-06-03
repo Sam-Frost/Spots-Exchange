@@ -11,7 +11,7 @@ class Db {
   fills: Fill[] = [];
 }
 
-const database = new Db();
+export const database = new Db();
 
 export const db = {
   user: {
@@ -20,6 +20,8 @@ export const db = {
     increaseBalance,
     lockBalance,
     reduceCollateral,
+    increaseAsset,
+    decreaseAsset,
   },
   orderbook: {
     createNewOrderBook,
@@ -54,10 +56,10 @@ function createUser(userId: number) {
 }
 
 function increaseBalance(userId: number, amount: bigint) {
+  console.log(`userId ${userId}`);
   const user = getUser(userId);
 
-  user.balance += amount;
-
+  user.balance += BigInt(amount);
   return user.balance;
 }
 
@@ -74,7 +76,10 @@ function decreaseBalance(userId: number, amount: bigint) {
 
 function lockBalance(userId: number, amount: bigint) {
   const user = getUser(userId);
-
+  amount = BigInt(amount);
+  console.log(typeof amount);
+  console.log(typeof user.lockedBalance);
+  console.log(typeof user.balance);
   if (user.balance - amount >= 0n) {
     user.balance -= amount;
     user.lockedBalance += amount;
@@ -91,6 +96,30 @@ function reduceCollateral(userId: number, amount: bigint) {
   }
 
   throw new Error("User doesn't have enough balance for reducing");
+}
+
+function increaseAsset(userId: number, marketId: number, amount: bigint) {
+  const user = getUser(userId);
+
+  let existingAsset = user.assets.getOrInsert(marketId, 0n);
+
+  user.assets.set(marketId, (existingAsset += amount));
+
+  return (existingAsset += amount);
+}
+
+function decreaseAsset(userId: number, marketId: number, amount: bigint) {
+  const user = getUser(userId);
+
+  let existingAsset = user.assets.getOrInsert(marketId, 0n);
+
+  if (existingAsset - amount < 0) {
+    throw new Error("User don't have this much asset!");
+  }
+
+  user.assets.set(marketId, (existingAsset -= amount));
+
+  return (existingAsset -= amount);
 }
 
 // Orderbook Functions

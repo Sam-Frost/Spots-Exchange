@@ -11,7 +11,7 @@ export type RegisterUser = {
 
 export type AddBalance = {
   userId: number;
-  amount: string;
+  amount: bigint;
 };
 
 export type OrderType = "MARKET" | "LIMIT";

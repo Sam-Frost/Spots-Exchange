@@ -4,6 +4,7 @@ import { sendToBackend } from "../redis/redis";
 import { logger } from "../util/logger";
 
 export async function createMarket(data: ToEngine<CreateMarket>) {
+  data.data.marketId = Number(data.data.marketId);
   db.orderbook.createNewOrderBook(data.data.marketId);
   logger.info(`Orderbook for market id ${data.data.marketId} created!`);
 

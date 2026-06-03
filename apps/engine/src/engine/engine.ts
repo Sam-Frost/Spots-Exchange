@@ -18,11 +18,14 @@ import { logger } from "../util/logger";
 
 export async function engineInit() {
   logger.info("Engine starting listening...");
+
+  let lastId = "$";
+
   while (true) {
     const event = await streamReader.XREAD(
       {
         key: BACKEND_TO_ENGINE_STREAM,
-        id: "$",
+        id: lastId,
       },
       {
         COUNT: 1,
@@ -30,10 +33,15 @@ export async function engineInit() {
       },
     );
 
-    if (!event) continue;
+    if (!event || event.length == 0) continue;
+    // console.log(event[0]!.messages[0]);
 
-    let eventData = event[0]?.messages[0].message as ToEngine<unknown>;
-    eventData.data = JSON.parse(eventData.data as string);
+    // let eventData = event[0]?.messages[0].message as ToEngine<unknown>;
+    // eventData.data = JSON.parse(eventData.data as string);
+    lastId = event[0]!.messages[0]!.id;
+    const rawMessage = event[0]!.messages[0]!.message.message;
+
+    const eventData = JSON.parse(rawMessage) as ToEngine<unknown>;
 
     logger.info(`Event Received :  ${eventData.eventName}`);
 
@@ -59,6 +67,7 @@ export async function engineInit() {
           );
       }
     } catch (err) {
+      console.log(err);
       if (err instanceof Error) {
         logger.error(err.message);
         await sendErrorToBackend(

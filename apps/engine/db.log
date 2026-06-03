@@ -1,0 +1,100 @@
+{
+  "users": [
+    {
+      "userId": 1,
+      "balance": "999000",
+      "lockedBalance": "1000",
+      "assets": {
+        "__type": "Map",
+        "value": []
+      }
+    },
+    {
+      "userId": 2,
+      "balance": "1000000",
+      "lockedBalance": "0",
+      "assets": {
+        "__type": "Map",
+        "value": [
+          [
+            1,
+            "0"
+          ]
+        ]
+      }
+    },
+    {
+      "userId": 3,
+      "balance": "1000000",
+      "lockedBalance": "0",
+      "assets": {
+        "__type": "Map",
+        "value": [
+          [
+            1,
+            "0"
+          ]
+        ]
+      }
+    }
+  ],
+  "orderbooks": {
+    "__type": "Map",
+    "value": [
+      [
+        1,
+        {
+          "asks": {
+            "__type": "Map",
+            "value": [
+              [
+                "100",
+                [
+                  {
+                    "id": "5f76fda9-2dc2-4aae-8701-be172f176756",
+                    "userId": 2,
+                    "orderId": 2,
+                    "quantityStep": "4",
+                    "priceTick": "100",
+                    "lockedCollateral": "0"
+                  },
+                  {
+                    "id": "52580210-687b-4c2a-a87f-58b5820e1cb4",
+                    "userId": 3,
+                    "orderId": 3,
+                    "quantityStep": "3",
+                    "priceTick": "100",
+                    "lockedCollateral": "0"
+                  }
+                ]
+              ],
+              [
+                "101",
+                [
+                  {
+                    "id": "76ad71d5-cf1c-4572-a855-6f650d92b55a",
+                    "userId": 2,
+                    "orderId": 4,
+                    "quantityStep": "5",
+                    "priceTick": "101",
+                    "lockedCollateral": "0"
+                  }
+                ]
+              ]
+            ]
+          },
+          "bids": {
+            "__type": "Map",
+            "value": []
+          },
+          "askPriceTicks": [
+            "100",
+            "101"
+          ],
+          "bidPriceTicks": []
+        }
+      ]
+    ]
+  },
+  "fills": []
+}
